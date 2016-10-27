@@ -7,6 +7,7 @@
 #include <math.h>
 #include<graphics.h>
 #include <algorithm>
+#include <errno.h>
 using namespace std;
 int weight(char ch);
 int unary(char ch);
@@ -48,7 +49,7 @@ int unary(char ch){
 	switch (ch){
 		case 's':
     	case 'c':
-    	//case 'l':
+    	case 'l':
     	case 't':return 1;
     	default:return 0;
 	}
@@ -69,7 +70,7 @@ float computeu(float a,char ch)
     	case 's':return sin(a);
     	case 'c': return cos(a);
     	case 't':return tan(a);
-    	//case 'l':return log(a);
+    	case 'l':return log(a);
     	}
 }
 int isoprtr(char ch) {
@@ -209,9 +210,11 @@ float ineval(char infix[]) {
 //	}
 	return oprnd.top();
 }
+double xaxis[100000],yaxis[100000],xaxis2[100000],yaxis2[100000];
 
 int main()
 {
+    cout<<"Enter the function with proper brackets\n";
 char input[200],to_send[200],temp[200];
 gets(input);
 char infix[200]={'('};
@@ -235,25 +238,65 @@ to_send[j]='\0';
 //cout<<to_send;
 double k;
 i=0;
+char answer;
 double start,stop,jump;
-double xaxis[1000],yaxis[1000],xaxis2[1000],yaxis2[1000];
-for(k=-10;k<=10;k=k+0.10000,++i){
+cout<<"Would you like to enter range manually? (y/n) ";
+cin>>answer;
+if(answer=='y'||answer=='Y'){
+    cout<<"Enter starting and ending of graph \n";
+    cin>>start>>stop;
+    start=(double)start;
+    stop=(double)(stop);
+}
+else{
+        start=-10.0;
+        stop=10.0;
+
+}
+answer='n';
+cout<<"Would you like to enter jump manually? (y/n) ";
+cin>>answer;
+if(answer=='y'||answer=='Y'){
+    cout<<"Enter the jump for graph \n";
+    cin>>jump;
+    jump=(double)jump;
+}
+else{
+        jump=((stop-start))/((sizeof(xaxis)-1)/sizeof(*xaxis));
+
+
+}
+for(k=start;k<=stop+jump;k=k+jump,++i){
     xaxis[i]=k;
     xaxis2[i]=k;
     //cout<<xaxis[i]<<",";
 }
-cout<<endl;
-for(i=0;i<201;++i){
-    strcpy(temp,to_send);
+double length=(((double)(stop-start))/(double)(jump)) +1;
+cout<<endl<<endl;
+//for(i=0;i<length;++i){
+  i=0;
+  cout<<"Y values \n";
+  for(k=start;k<=stop+jump;k=k+jump,++i){
+
+  strcpy(temp,to_send);
     replacex(temp,xaxis[i]);
     //cout<<temp;
     yaxis[i]=ineval(temp);
+    //cout<<errno<<endl;
+    if(errno==33||errno==34){
+        yaxis[i]=0;
+    }
+   /* if(yaxis[i]>1000)
+        yaxis[i]=1000;
+    else if(yaxis[i]<-1000)
+       yaxis[i]=-1000;
+       */
     yaxis2[i]=yaxis[i];
-    //cout<<yaxis[i]<<",";
+    //cout<<yaxis[i]<<"\n";
 }
-double* ymax=max_element(yaxis,yaxis+201);
+double* ymax=max_element(yaxis,yaxis+(int)length);
 double maxy=*ymax;
-double* ymin=min_element(yaxis,yaxis+201);
+double* ymin=min_element(yaxis,yaxis+(int)length);
 double miny=*ymin;
 double diff1=fabs(miny);
 double diff2=fabs(maxy);
@@ -262,35 +305,43 @@ double range= (diff1>diff2)?diff1:diff2;
 cout<<range;
 int gd = DETECT, gm;
 initgraph(&gd, &gm, "");
-int x1,y1;
+double x1,y1;
+x1=(0-(start))*((double)getmaxx()/(stop-start));
 line(0, getmaxy() / 2, getmaxx(), getmaxy() / 2);
-line(getmaxx()/2,0,getmaxx()/2,getmaxy());
+line(x1,0,x1,getmaxy());
 cout<<endl<<getmaxx();
 cout<<endl<<getmaxy()/2;
-for(i=0;i<201;++i)
+for(i=0;i<length;++i)
     {if(xaxis[i]==0)
     cout<<"Zero element"<<xaxis[i];}
 
-  for (i=0;i<201;++i)
+  for (i=0;i<length;++i)
   {
-     xaxis[i]=(xaxis[i]+10)*((double)getmaxx()/20);
+     xaxis[i]=((xaxis[i])-(start))*((double)getmaxx()/(stop-start));
      long double scale=yaxis[i]*(long double)(getmaxy()/2);
-     cout<<endl<<"scale1 "<<scale<<endl;
+     //cout<<"scale1 "<<scale<<endl;
      scale=(long double)(scale/(long double)(range));
-     cout<<scale;
+     //cout<<scale;
+
      yaxis[i] = (double)(getmaxy()/2) - scale;
-     putpixel(xaxis[i],yaxis[i],2);
+     putpixel(xaxis[i],yaxis[i],4);
   }
-for(i=0;i<201;++i)
-        cout<<"("<<xaxis2[i]<<" , "<<xaxis[i]<<" , "<<yaxis2[i]<<" , "<<yaxis[i]<<")\n";
-for (i=0;i<200;++i)
-    line(xaxis[i],yaxis[i],xaxis[i+1],yaxis[i+1]);
-outtextxy(getmaxx()/2,getmaxy()/2+3,"(0,0");
-for(i=0;i<201;i=i+10)
-    {putpixel(xaxis[i],getmaxy()/2,1);
+//for(i=0;i<length;++i)
+        //cout<<"("<<xaxis2[i]<<" , "<<xaxis[i]<<" , "<<yaxis2[i]<<" , "<<yaxis[i]<<")\n";
+setcolor(RED);
+for (i=0;i<length-2;++i){
+        //cout<<"line at"<<xaxis[i]<<" "<<yaxis[i]<<" "<<xaxis[i+1]<<" "<<yaxis[i+1]<<endl;
+        //cout<<"value of i is "<<i<<"length is "<<length<<endl;
+    line(xaxis[i],yaxis[i],xaxis[i+1],yaxis[i+1]);}
+setcolor(WHITE);
+outtextxy(x1,getmaxy()/2+3,"(0,0");
+
 
     //outtextxy(xaxis[i],(getmaxy()/2)+2,"%s"xaxis[i]);
-    }
+
+//char
+//sprintf(number,"%d",start)
+//outtextxy(getmaxx()/2,getmaxy()/2+3,);
 
 
 getch();
