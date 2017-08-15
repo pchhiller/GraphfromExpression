@@ -2,24 +2,22 @@
 #include<stack>
 #include <string.h>
 #include<stdio.h>
+#include<ctype.h>
+#include<stdlib.h>
 #include <math.h>
 #include<graphics.h>
 #include <algorithm>
 #include <errno.h>
-
-
 using namespace std;
-
 int weight(char ch);
 int unary(char ch);
-void replacex(char exp[],double num);
+void replacex(char exp[],float num);
 float ineval(char infix[]);
 int isvalid( char op[],int i);
 
-void replacex(char exp[],double num){
+void replacex(char exp[],float num){
 char temp[200]="",number[20],temp1[20];
-//sprintf(number,"%lf",num);
-gcvt (num,10,number);
+sprintf(number,"%lf",num);
 if(num<0)
     {strcpy(temp1,"`");
     strcat(temp1,number);
@@ -213,41 +211,10 @@ float ineval(char infix[]) {
 	return oprnd.top();
 }
 double xaxis[100000],yaxis[100000],xaxis2[100000],yaxis2[100000];
-void DrawGrid(int x){
-line(0, getmaxy() / 2, getmaxx(), getmaxy() / 2);
-line(x,0,x,getmaxy());
-//cout<<endl<<getmaxx();
-//cout<<endl<<getmaxy()/2;
-//for(i=0;i<length;++i)
-  //  {if(xaxis[i]==0)}
-    //cout<<"Zero element"<<xaxis[i];}
-for(int i=0;i<10;++i)
-{
-    line(i*getmaxx()/10,0,i*getmaxx()/10,getmaxy());
-    line(0,i*getmaxy()/10,getmaxx(),i*getmaxy()/10);
-
-}
-
-}
-
-void DrawGraph(double xaxis[],double yaxis[],double diff,double range,double start,double length){
-for (int i=0;i<length;++i)
-  {
-     xaxis[i]=((xaxis[i])-(start))*((double)getmaxx()/(diff));
-     long double scale=yaxis[i]*(long double)(getmaxy()/2);
-     //cout<<"scale1 "<<scale<<endl;
-     scale=(long double)(scale/(long double)(range));
-     //cout<<scale;
-
-     yaxis[i] = (double)(getmaxy()/2) - scale;
-     putpixel(xaxis[i],yaxis[i],2);
-  }
-
-  }
 
 int main()
 {
-cout<<"Enter the function with proper brackets\n";
+    cout<<"Enter the function with proper brackets\n";
 char input[200],to_send[200],temp[200];
 gets(input);
 char infix[200]={'('};
@@ -257,8 +224,7 @@ int i=0,j=0;
 while(infix[i]!='\0'){
 if(infix[i]==' '){
     ++i;
-}
-else if(isvalid(infix,i)){
+}else if(isvalid(infix,i)){
 to_send[j]=infix[i];
 i=i+3;
 ++j;}
@@ -273,8 +239,8 @@ to_send[j]='\0';
 double k;
 i=0;
 char answer;
-double start,stop,jump,maxval;
-cout<<"Would you like to enter range for x manually? (y/n) ";
+double start,stop,jump;
+cout<<"Would you like to enter range manually? (y/n) ";
 cin>>answer;
 if(answer=='y'||answer=='Y'){
     cout<<"Enter starting and ending of graph \n";
@@ -288,29 +254,28 @@ else{
 
 }
 answer='n';
+cout<<"Would you like to enter jump manually? (y/n) ";
+cin>>answer;
+if(answer=='y'||answer=='Y'){
+    cout<<"Enter the jump for graph \n";
+    cin>>jump;
+    jump=(double)jump;
+}
+else{
+        jump=((stop-start))/((sizeof(xaxis)-1)/sizeof(*xaxis));
 
-maxval=1000;
 
-
-
-
-int gd = DETECT, gm;
-initgraph(&gd, &gm, "");
-
-
-cleardevice();
-jump=((stop-start))/((sizeof(xaxis)-2)/sizeof(*xaxis));
-//cout<<jump;
+}
 for(k=start;k<=stop+jump;k=k+jump,++i){
     xaxis[i]=k;
     xaxis2[i]=k;
     //cout<<xaxis[i]<<",";
 }
 double length=(((double)(stop-start))/(double)(jump)) +1;
-//cout<<endl<<endl;
+cout<<endl<<endl;
 //for(i=0;i<length;++i){
   i=0;
- // cout<<"Y values \n";
+  cout<<"Y values \n";
   for(k=start;k<=stop+jump;k=k+jump,++i){
 
   strcpy(temp,to_send);
@@ -321,11 +286,11 @@ double length=(((double)(stop-start))/(double)(jump)) +1;
     if(errno==33||errno==34){
         yaxis[i]=0;
     }
-    if(yaxis[i]>maxval)
-        yaxis[i]=maxval;
-    else if(yaxis[i]<(-1*maxval))
-       yaxis[i]=(-1*maxval);
-
+   /* if(yaxis[i]>1000)
+        yaxis[i]=1000;
+    else if(yaxis[i]<-1000)
+       yaxis[i]=-1000;
+       */
     yaxis2[i]=yaxis[i];
     //cout<<yaxis[i]<<"\n";
 }
@@ -337,46 +302,39 @@ double diff1=fabs(miny);
 double diff2=fabs(maxy);
 double range= (diff1>diff2)?diff1:diff2;
 
-//cout<<range;
+cout<<range;
+int gd = DETECT, gm;
+initgraph(&gd, &gm, "");
 double x1,y1;
 x1=(0-(start))*((double)getmaxx()/(stop-start));
-DrawGrid(x1);
+line(0, getmaxy() / 2, getmaxx(), getmaxy() / 2);
+line(x1,0,x1,getmaxy());
+cout<<endl<<getmaxx();
+cout<<endl<<getmaxy()/2;
+for(i=0;i<length;++i)
+    {if(xaxis[i]==0)
+    cout<<"Zero element"<<xaxis[i];}
 
-DrawGraph(xaxis,yaxis,(stop-start),range,start,length);
+  for (i=0;i<length;++i)
+  {
+     xaxis[i]=((xaxis[i])-(start))*((double)getmaxx()/(stop-start));
+     long double scale=yaxis[i]*(long double)(getmaxy()/2);
+     //cout<<"scale1 "<<scale<<endl;
+     scale=(long double)(scale/(long double)(range));
+     //cout<<scale;
 
-for(i=1000;i<1100;++i)
-        cout<<"("<<xaxis[i]<<" , "<<yaxis[i]<<")\n";
-setcolor(WHITE);
-/*for (i=0;i<length-2;++i){
-
+     yaxis[i] = (double)(getmaxy()/2) - scale;
+     putpixel(xaxis[i],yaxis[i],4);
+  }
+//for(i=0;i<length;++i)
+        //cout<<"("<<xaxis2[i]<<" , "<<xaxis[i]<<" , "<<yaxis2[i]<<" , "<<yaxis[i]<<")\n";
+setcolor(RED);
+for (i=0;i<length-2;++i){
         //cout<<"line at"<<xaxis[i]<<" "<<yaxis[i]<<" "<<xaxis[i+1]<<" "<<yaxis[i+1]<<endl;
         //cout<<"value of i is "<<i<<"length is "<<length<<endl;
-    line(xaxis[i],yaxis[i],xaxis[i+1],yaxis[i+1]);
-
-    }
-    */
-
-for(i=0;i<length;i=i+(length/10))
-{   if(i==50000)
-    continue;
-    float a = floor(xaxis2[i]);
-    //cout<<a;
-    float b = yaxis2[i];
-    char xval [30];
-    char yval [30];
-    gcvt (a,6,xval);
-    gcvt (b,4,yval);
-    char out[50]="(";
-    strcat(out,xval);
-    strcat(out,",");
-    strcat(out,yval);
-    strcat(out,")");
-    //cout<<i<<" "<<xaxis[i]<<endl;
-    outtextxy(xaxis[i],yaxis[i],out);
-
-}
+    line(xaxis[i],yaxis[i],xaxis[i+1],yaxis[i+1]);}
 setcolor(WHITE);
-outtextxy(x1,getmaxy()/2+3,"(0,0)");
+outtextxy(x1,getmaxy()/2+3,"(0,0");
 
 
     //outtextxy(xaxis[i],(getmaxy()/2)+2,"%s"xaxis[i]);
@@ -384,6 +342,7 @@ outtextxy(x1,getmaxy()/2+3,"(0,0)");
 //char
 //sprintf(number,"%d",start)
 //outtextxy(getmaxx()/2,getmaxy()/2+3,);
+
 
 getch();
 //replacex(to_send,10);
