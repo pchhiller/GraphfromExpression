@@ -372,7 +372,7 @@ for(i=0;i<length;i=i+(length/10))
     strcat(out,yval);
     strcat(out,")");
     //cout<<i<<" "<<xaxis[i]<<endl;
-    outtextxy(xaxis[i],yaxis[i],out);
+   // outtextxy(xaxis[i],yaxis[i],out);
 
 }
 setcolor(WHITE);
