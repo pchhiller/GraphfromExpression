@@ -21,7 +21,8 @@ char temp[200]="",number[20],temp1[20];
 //sprintf(number,"%lf",num);
 gcvt (num,10,number);
 if(num<0)
-    {strcpy(temp1,"`");
+    {
+    strcpy(temp1,"`");
     strcat(temp1,number);
     strcpy(number,temp1);
     }
@@ -288,16 +289,10 @@ else{
 
 }
 answer='n';
-
 maxval=1000;
-
-
-
 
 int gd = DETECT, gm;
 initgraph(&gd, &gm, "");
-
-
 cleardevice();
 jump=((stop-start))/((sizeof(xaxis)-2)/sizeof(*xaxis));
 //cout<<jump;
@@ -329,15 +324,13 @@ double length=(((double)(stop-start))/(double)(jump)) +1;
     yaxis2[i]=yaxis[i];
     //cout<<yaxis[i]<<"\n";
 }
-double* ymax=max_element(yaxis,yaxis+(int)length);
+double ymax=*max_element(yaxis,yaxis+(int)length);
 double maxy=*ymax;
-double* ymin=min_element(yaxis,yaxis+(int)length);
+double ymin=*min_element(yaxis,yaxis+(int)length);
 double miny=*ymin;
 double diff1=fabs(miny);
 double diff2=fabs(maxy);
 double range= (diff1>diff2)?diff1:diff2;
-
-//cout<<range;
 double x1,y1;
 x1=(0-(start))*((double)getmaxx()/(stop-start));
 DrawGrid(x1);
@@ -387,8 +380,4 @@ outtextxy(x1,getmaxy()/2+3,"(0,0)");
 
 getch();
 //replacex(to_send,10);
-//float ans;
-//ans=ineval(to_send);
-//cout<<ans;
-
 }
