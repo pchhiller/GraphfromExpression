@@ -201,27 +201,14 @@ float ineval(char infix[]) {
 		//cout<<infix<<" ";
 
 	}
-//	int len=oprnd.size();
-//	for(int i=0;i<len;++i)
-//	{cout<<oprnd.top()<<" ";
-//	oprnd.pop();
-//	}
-//	len=oprtr.size();
-//	for(int i=0;i<len;++i)
-//	{cout<<oprtr.top()<<" ";
-//	oprnd.pop();
-//	}
+
 	return oprnd.top();
 }
 double xaxis[100000],yaxis[100000],xaxis2[100000],yaxis2[100000];
 void DrawGrid(int x){
 line(0, getmaxy() / 2, getmaxx(), getmaxy() / 2);
 line(x,0,x,getmaxy());
-//cout<<endl<<getmaxx();
-//cout<<endl<<getmaxy()/2;
-//for(i=0;i<length;++i)
-  //  {if(xaxis[i]==0)}
-    //cout<<"Zero element"<<xaxis[i];}
+
 for(int i=0;i<10;++i)
 {
     line(i*getmaxx()/10,0,i*getmaxx()/10,getmaxy());
@@ -238,7 +225,6 @@ for (int i=0;i<length;++i)
      long double scale=yaxis[i]*(long double)(getmaxy()/2);
      //cout<<"scale1 "<<scale<<endl;
      scale=(long double)(scale/(long double)(range));
-     //cout<<scale;
 
      yaxis[i] = (double)(getmaxy()/2) - scale;
      putpixel(xaxis[i],yaxis[i],2);
@@ -340,14 +326,6 @@ DrawGraph(xaxis,yaxis,(stop-start),range,start,length);
 for(i=1000;i<1100;++i)
         cout<<"("<<xaxis[i]<<" , "<<yaxis[i]<<")\n";
 setcolor(WHITE);
-/*for (i=0;i<length-2;++i){
-
-        //cout<<"line at"<<xaxis[i]<<" "<<yaxis[i]<<" "<<xaxis[i+1]<<" "<<yaxis[i+1]<<endl;
-        //cout<<"value of i is "<<i<<"length is "<<length<<endl;
-    line(xaxis[i],yaxis[i],xaxis[i+1],yaxis[i+1]);
-
-    }
-    */
 
 for(i=0;i<length;i=i+(length/10))
 {   if(i==50000)
@@ -364,19 +342,11 @@ for(i=0;i<length;i=i+(length/10))
     strcat(out,",");
     strcat(out,yval);
     strcat(out,")");
-    //cout<<i<<" "<<xaxis[i]<<endl;
-   // outtextxy(xaxis[i],yaxis[i],out);
 
 }
 setcolor(WHITE);
 outtextxy(x1,getmaxy()/2+3,"(0,0)");
 
-
-    //outtextxy(xaxis[i],(getmaxy()/2)+2,"%s"xaxis[i]);
-
-//char
-//sprintf(number,"%d",start)
-//outtextxy(getmaxx()/2,getmaxy()/2+3,);
 
 getch();
 //replacex(to_send,10);
