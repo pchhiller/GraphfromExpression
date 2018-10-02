@@ -1,9 +1,9 @@
-#include<iostream>
-#include<stack>
+#include <iostream>
+#include <stack>
 #include <string.h>
-#include<stdio.h>
+#include <stdio.h>
 #include <math.h>
-#include<graphics.h>
+#include <graphics.h>
 #include <algorithm>
 #include <errno.h>
 
